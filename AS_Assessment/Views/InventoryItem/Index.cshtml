@@ -1,0 +1,150 @@
+﻿@using AS_Assessment.Enums
+@model IEnumerable<AS_Assessment.DTOs.InventoryItemReadDto>
+
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+
+@{
+    bool isAdmin = (bool)ViewData["IsAdmin"];
+    bool isAuthenticated = (bool)ViewData["IsAuthenticated"];
+    string currentUserId = (string)ViewData["CurrentUserId"];
+    string currentViewMode = (string)ViewData["ViewMode"];
+    string searchName = (string)ViewData["SearchName"];
+    string selectedCategory = (string)ViewData["CategoryId"];
+    StockStatus? selectedStockStatus = ViewData["StockStatus"] as StockStatus?;
+}
+
+<h2>Inventory Items</h2>
+
+<form method="get" id="filterForm" class="mb-3">
+    <input
+        type="text"
+        name="searchName"
+        placeholder="Search by Name"
+        value="@searchName"
+        class="form-control mb-2"
+        id="searchName" />
+
+    <select
+        name="categoryId"
+        class="form-select mb-2"
+        asp-items="ViewBag.Categories"
+        id="categoryId">
+        <option value="">All Categories</option>
+    </select>
+
+    <select
+        name="stockStatus"
+        class="form-select mb-2"
+        id="stockStatus">
+        <option value="">All Stock Statuses</option>
+        @{
+            foreach (var status in Enum.GetValues(typeof(StockStatus)).Cast<StockStatus>())
+            {
+                var selected = selectedStockStatus == status ? " selected" : "";
+                @: <option value="@status"@selected>@status</option>
+            }
+        }
+    </select>
+
+    @if (isAuthenticated && !isAdmin)
+    {
+        <select
+            name="viewMode"
+            class="form-select mb-2"
+            id="viewMode">
+            @{
+                var options = new Dictionary<string, string>
+                {
+                    { "AllItems", "All Items" },
+                    { "MyItems", "My Items" }
+                };
+
+                foreach (var opt in options)
+                {
+                    var selected = currentViewMode == opt.Key ? " selected" : "";
+                    @: <option value="@opt.Key"@selected>@opt.Value</option>
+                }
+            }
+        </select>
+    }
+
+    @* Removed filter submit button to enable auto-submit on change *@
+    @* <button type="submit" class="btn btn-primary">Filter</button> *@
+
+    @if (isAuthenticated)
+    {
+        <a asp-action="Add" class="btn btn-success ms-2">Add New Item</a>
+    }
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th>Stock Status</th>
+            <th>Category</th>
+            <th>Needed</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Quantity</td>
+                <td>@item.StockStatus</td>
+                <td>@item.CategoryName</td>
+                <td>@item.WhatNeeded</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm">Details</a>
+
+                    @if (isAdmin)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
+                        <button class="btn btn-danger btn-sm" onclick="deleteItem('@item.Id')">Delete</button>
+                    }
+                    else if (isAuthenticated && currentViewMode == "MyItems" && item.UserId == currentUserId)
+                    {
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
+                        <button class="btn btn-danger btn-sm" onclick="deleteItem('@item.Id')">Delete</button>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        // Elements to watch for changes
+        const filterControls = ['searchName', 'categoryId', 'stockStatus', 'viewMode']
+            .map(id => document.getElementById(id))
+            .filter(el => el !== null);
+
+        filterControls.forEach(control => {
+            control.addEventListener('change', () => {
+                document.getElementById('filterForm').submit();
+            });
+        });
+
+        // Delete confirmation and request
+        async function deleteItem(id) {
+            if (!confirm('Are you sure you want to delete this item?')) return;
+
+            const response = await fetch('@Url.Action("Delete")/' + id, {
+                method: 'DELETE',
+                headers: {
+                    'RequestVerificationToken': '@Antiforgery.GetAndStoreTokens(Context).RequestToken'
+                }
+            });
+
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert('Failed to delete item.');
+            }
+        }
+    </script>
+}

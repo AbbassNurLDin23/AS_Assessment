@@ -1,0 +1,17 @@
+﻿@model AS_Assessment.DTOs.UpdateCategoryDTO
+@{
+    ViewBag.Title = "Edit Category";
+}
+
+<h2>Edit Category</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" name="id" value="@ViewBag.CategoryId" />
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Save</button>
+    <a asp-action="Index" class="btn btn-secondary mt-2">Cancel</a>
+</form>

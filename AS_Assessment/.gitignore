@@ -1,0 +1,49 @@
+﻿# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Visual Studio temporary files
+.vs/
+
+# Packages folder (if using NuGet package restore, no need to commit packages)
+packages/
+
+# Rider IDE files (if applicable)
+.idea/
+
+# Resharper files
+_ReSharper*/
+*.DotSettings.user
+
+# Publish folder
+publish/
+
+# Logs
+*.log
+
+# Others
+*.vspscc
+*.vssscc
+
+# Npm or node modules if you have front-end stuff
+node_modules/
+
+# If you use npm/yarn for front-end packages, ignore these
+bower_components/
+
+# Others
+*.dbmdl
+*.dbproj.schemaview
+
+# If you use web.config transforms
+# (usually those are committed, but if you have local versions, ignore them accordingly)
+
+# SQLite database file
+*.db
+*.sqlite

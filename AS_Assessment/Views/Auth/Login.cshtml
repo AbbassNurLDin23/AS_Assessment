@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+
+<!-- Show validation errors -->
+<div asp-validation-summary="All" class="text-danger"></div>
+
+<form method="post" asp-controller="Auth" asp-action="WebLogin">
+    <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="Email" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="Password" class="form-control" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
+
+<hr />
+<a asp-action="Register" class="btn btn-success mb-3">Register</a>
