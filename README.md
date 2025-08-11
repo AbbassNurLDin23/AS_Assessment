@@ -52,7 +52,7 @@ Email: admin@example.com
 
 Password: Admin@123
 
-##Usage
+Usage
 Browse the inventory items as any user or guest.
 
 Register and login to add your own inventory items.
