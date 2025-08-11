@@ -45,7 +45,7 @@ Update-Database
 
 
 
-##Default Admin Credentials
+Default Admin Credentials
 Use the following to log in as an admin user:
 
 Email: admin@example.com
@@ -61,7 +61,7 @@ Admin users can manage all categories and inventory items.
 
 Use the AI enhancement button when adding or editing items to get smart suggestions for item details.
 
-##Technologies Used
+Technologies Used
 ASP.NET Core MVC
 
 Entity Framework Core
@@ -70,7 +70,7 @@ ASP.NET Identity with JWT authentication
 
 AI integration for content enhancement
 
-##Notes
+Notes
 Make sure your database connection string is configured properly in appsettings.json.
 
 Keep your AI API key secure and do not expose it publicly.
